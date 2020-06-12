@@ -1,31 +1,31 @@
 options
 {
-    LOOKAHEAD=2;
+  UNICODE_INPUT = true;
+
 }
-PARSER_BEGIN(Calculator)
-public class Calculator
+
+PARSER_BEGIN(Printer)
+
+import java.io.*;
+
+public class Printer
 {
-    public static void main(String args[]) throws ParseException
-    {
-        Calculator parser = new Calculator(System.in);
-        while (true)
-        {
-            parser.parseOneLine();
-        }
-    }
+  public static void main(String args []) throws ParseException
+  {
+    Printer parser = new Printer(System.in);
+    parser.parse(System.out);
+  }
 }
-PARSER_END(Calculator)
-SKIP :
+
+PARSER_END(Printer)
+
+SKIP:
 {
-   "\r"
-|   "\t"
+  "\n"
+| "\r"
+| "\r\n"
 }
-TOKEN:
-{
-    < NUMBER: (<DIGIT>)+ ( "." (<DIGIT>)+ )? >
-|   < DIGIT: ["0"-"9"] >
-|   < EOL: "\n" >
-}
+
 TOKEN:
 {
   < PRINT: "print" >
@@ -415,56 +415,4 @@ void parse(PrintStream ps) :
     System.out.println(t.image);
   }
   )
-}
-void parseOneLine():
-{
-    double a;
-}
-{
-    a=expr() <EOL>      { System.out.println(a); }
-  | <EOL>
-  | <EOF>               { System.exit(-1); }
-}
-double expr():
-{
-    double a;
-    double b;
-}
-{
-    a=term()
-    (
-        "+" b=expr()    { a += b; }
-    |   "-" b=expr()    { a -= b; }
-    )*
-                        { return a; }
-}
-double term():
-{
-    double a;
-    double b;
-}
-{
-    a=unary()
-    (
-        "*" b=term()    { a *= b; }
-    |   "/" b=term()    { a /= b; }
-    )*
-                        { return a; }
-}
-double unary():
-{
-    double a;
-}
-{
-    "-" a=element()     { return -a; }
-|   a=element()         { return a; }
-}
-double element():
-{
-    Token t;
-    double a;
-}
-{
-    t=<NUMBER>          { return Double.parseDouble(t.toString()); }
-|   "(" a=expr() ")"    { return a; }
 }
