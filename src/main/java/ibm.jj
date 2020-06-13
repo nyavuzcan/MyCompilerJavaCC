@@ -1,0 +1,80 @@
+PARSER_BEGIN(UQLParser)
+
+
+
+import java.io.StringReader;
+import java.io.Reader;
+
+public class UQLParser {
+
+/**
+  A String based constructor for ease of use.
+  **/
+    public UQLParser(String s)
+    {
+        this((Reader)(new StringReader(s)));
+
+    }
+
+    public static void main(String args[])
+    {
+        try
+        {
+              String query = args[0];
+              UQLParser parser = new UQLParser(query);
+              parser.expression();
+        }
+        catch(Exception e)
+        {
+              e.printStackTrace();
+        }
+    }
+}
+PARSER_END(UQLParser)
+
+SKIP :
+{
+    " "
+    | "\t"
+    | "\r"
+    | "\n"
+
+}
+TOKEN: /*RESERVED TOKENS FOR UQL */
+{
+      <AND: "and">
+   |  <OR:  "or">
+   |  <TITLE: "title">
+   |  <ACTOR: "actor">
+   |  <DIRECTOR: "director">
+   |  <KEYWORD: "keyword">
+   |  <LPAREN: "(">
+   |  <RPAREN: ")">
+   |  <EQUALS: "=">
+   |  <NOTEQUAL: "<>">
+}
+TOKEN :
+{
+<STRING : (["A"-"Z", "0"-"9"])+ > |
+<QUOTED_STRING: "\"" (~["\""])+ "\"" >
+}
+void expression() :
+{
+}
+{            queryTerm()
+            (
+              ( <AND> | <OR> )
+              queryTerm() )*
+}
+
+void queryTerm() :
+{
+}
+{
+        (<TITLE> | <ACTOR> |
+         <DIRECTOR> | <KEYWORD>)
+        ( <EQUALS> | <NOTEQUAL>)
+        ( <STRING> | <QUOTED_STRING> )
+        |
+       <LPAREN> expression() <RPAREN>
+}

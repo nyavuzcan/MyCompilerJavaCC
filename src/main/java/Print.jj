@@ -10,11 +10,12 @@ import java.io.*;
 
 public class Printer
 {
-  public static void main(String args []) throws ParseException
+  public static void main(String args [])
   {
     Printer parser = new Printer(System.in);
     parser.parse(System.out);
   }
+}}
 }
 
 PARSER_END(Printer)

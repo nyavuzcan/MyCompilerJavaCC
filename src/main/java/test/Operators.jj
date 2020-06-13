@@ -1,0 +1,65 @@
+options {
+    STATIC = true;
+
+}
+PARSER_BEGIN(Parser)
+package test;
+import java.util.HashMap;public class Parser {
+  static HashMap hashMap = new  HashMap();
+    public static void main(String ...args) throws ParseException {
+      Parser parser = new Parser(System.in);
+      parser.basla();
+      }
+}
+
+
+PARSER_END(Parser)
+
+SKIP :
+{
+< " " | "\t" | "\r" | "\n" | "\r\n" >
+| <"//" (~["\n","\r"])* ("\n"|"\r"|"\r\n") >
+| <"/*"(~["/"])*  "*""/" >
+}
+
+TOKEN :
+{
+  < EQUALS: "=" >
+}
+
+TOKEN:
+{
+    < VARIABLE: <LETTER>(<LETTER>|<DIGIT>)* >
+    | < #LETTER: ["a"-"z", "A"-"Z", "_"] >
+    | < #DIGIT: ["0"-"9"] >
+}
+
+TOKEN:
+{
+  < PRINT: "print" >
+| < STR: (< LETTER >)+>
+| < LETTER >
+}
+
+TOKEN : {
+<XXX:"XXX"> | <YAZDIR:"YAZDIR"> | <VARIABLE>
+}
+
+
+void basla():{}{degisken() }
+
+void degisken():{
+  Token tv;
+  Token tb;
+  String a;
+  String b;
+    }
+    {
+    <XXX> tv=<VARIABLE> <EQUALS> tb=<VARIABLE>
+    {a=tv.image; b=tb.image;}
+    {  hashMap.put(a,b);}
+    }
+
+
+
+
